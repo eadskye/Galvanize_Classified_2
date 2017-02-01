@@ -12,6 +12,12 @@
       name: 'app',
       abstract: true,
       component: 'appComponent',
-    });
+    })
+    .state({
+        name: 'classified',
+        parent: 'app',
+        url: '/',
+        component: 'appComponent'
+      });
   }
 }());
