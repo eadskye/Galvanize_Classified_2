@@ -1,0 +1,171 @@
+<nav class="navbar navbar-default">
+<div class="container">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand">Reddit Clone:</a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+  </div>
+</div>
+</nav>
+
+<main class="container">
+
+<div class="pull-right">
+  <p><a class="btn btn-info" ng-click="$ctrl.togglePostForm()">New Post</a></p>
+</div>
+
+<ul class="nav nav-pills">
+  <li role="presentation" class="active">
+    <input type="search" ng-model="$ctrl.search" class="form-control input-sm search-form" placeholder="Filter">
+  </li>
+  <li class="dropdown">
+    <a href="#"
+      class="dropdown-toggle"
+      data-toggle="dropdown"
+      role="button"
+      aria-haspopup="true"
+      aria-expanded="false">Sort By {{ $ctrl.sortDisplay }} <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+      <li><a ng-click="$ctrl.sortPosts('Votes')">Votes</a></li>
+      <li><a ng-click="$ctrl.sortPosts('Date')">Date</a></li>
+      <li><a ng-click="$ctrl.sortPosts('Title')">Title</a></li>
+    </ul>
+  </li>
+</ul>
+<!-- START: Visual post object -->
+<!-- <div class="row">
+  <div class="col-md-12">
+   <p> {{ $ctrl.post }}</p>
+  </div>
+</div> -->
+<!-- END: Visual post object -->
+<div class="row" ng-if="$ctrl.showPost == true">
+  <div class="col-md-8">
+      <form name="postform" ng-submit="$ctrl.createPost()" ng-disabled="postform.$invalid" novalidate>
+        <!-- START: Check form validation -->
+        <div class="row">
+          <div class="col-md-12">
+           <p ng-show="postform.title.$invalid">Fill out the bloody form already!</p>
+          </div>
+        </div>
+        <!-- END: Check form validation -->
+        <!-- START: title -->
+      <div class="col-md-8" ng-class="{'has-error' : postform.title.$invalid && postform.title.$dirty}">
+        <label for="title">Title</label>
+        <input id="title" name="title" class="form-control" placeholder="title"
+        ng-model="$ctrl.post.title"
+        ng-required="true">
+        <span class="help-block" ng-show="postform.title.$error.required && postform.title.$dirty">Skriv ditt djavla namn!!!</span>
+      </div>
+      <div class="col-md-4">
+        <p class="glyph-red" ng-show="postform.title.$invalid"><span class="glyphicon glyphicon-remove"></span></p>
+        <p class="glyph-green" ng-show="postform.title.$valid"><span class="glyphicon glyphicon-ok"></span></p>
+      </div>
+      <!-- END: title -->
+      <div class="col-md-8" ng-class="{'has-error' : postform.body.$invalid && postform.body.$dirty}">
+        <label for="body">Body</label>
+        <textarea id="body" name="body" class="form-control" placeholder="Some text here..."
+          ng-model="$ctrl.post.body"
+          ng-required="true">
+        </textarea>
+        <span class="help-block" ng-show="postform.body.$error.required && postform.body.$dirty">Skriv nagot!!!</span>
+      </div>
+      <div class="col-md-4">
+        <p ng-show="postform.body.$invalid"><span class="glyphicon glyphicon-remove glyph-red"></span></p>
+        <p ng-show="postform.body.$valid"><span class="glyphicon glyphicon-ok glyph-green"></span></p>
+      </div>
+      <div class="col-md-8" ng-class="{'has-error' : postform.author.$invalid && postform.author.$dirty}">
+        <label for="author">Author</label>
+        <input id="author" name="author" class="form-control" placeholder="Author name"
+        ng-model="$ctrl.post.author"
+        ng-required="true">
+        <span class="help-block" ng-show="postform.author.$error.required && postform.author.$dirty">Jar ser ingeting i fjaltet!!!</span>
+      </div>
+      <div class="col-md-4">
+        <p ng-show="postform.author.$invalid"><span class="glyphicon glyphicon-remove glyph-red"></span></p>
+        <p ng-show="postform.author.$valid"><span class="glyphicon glyphicon-ok glyph-green"></span></p>
+      </div>
+      <div class="col-md-8" ng-class="{'has-error' : postform.imageurl.$invalid && postform.imageurl.$dirty}">
+        <label for="image-url">Image URL</label>
+        <input id="image-url" name="imageurl" class="form-control" placeholder="URL"
+        ng-model="$ctrl.post.url"
+        ng-required="true">
+        <span class="help-block" ng-show="postform.imageurl.$error.required && postform.imageurl.$dirty">Kan vi for ser bilden tack!</span>
+      </div>
+      <div class="col-md-4">
+        <p ng-show="postform.imageurl.$invalid"><span class="glyphicon glyphicon-remove glyph-red"></span></p>
+        <p ng-show="postform.imageurl.$valid"><span class="glyphicon glyphicon-ok glyph-green"></span></p>
+      </div>
+      <div class="form-group col-md-8" style="margin-top:10px">
+        <button type="submit" class="btn btn-primary" ng-disabled="postform.$invalid">
+          <!-- ng-show="postform.$valid" -->
+          Create Post
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+    <!-- START: Post Listing -->
+<div class="row" ng-repeat="post in $ctrl.posts | orderBy: $ctrl.sort | filter: $ctrl.search">
+  <div class="col-md-12">
+    <div class="well">
+      <div class="media-left">
+        <img class="media-object" ng-src="{{post.url}}">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">
+          {{post.title}}
+          <a><i class="glyphicon glyphicon-arrow-up"
+          ng-click="$ctrl.addVote(post)"></i></a>
+          <a><i class="glyphicon glyphicon-arrow-down" ng-click="$ctrl.removeVote(post)"></i></a>
+          {{post.voteCnt}}
+        </h4>
+        <div class="text-right">
+          {{post.author}}
+        </div>
+        <p>
+          {{post.body}}
+        </p>
+        <div>
+          <time am-time-ago="post.time">{{ post.time }}</time>
+          |
+          <i class="glyphicon glyphicon-comment"></i>
+<!-- ng-click="ng-show="postform.$valid"" -->
+<!-- ************ COMMENT TOGGLE ************ -->
+          <a ng-click="showComment = !showComment">
+            {{ post.comments.length }} Comments
+          </a>
+        </div>
+        <div class="row" ng-if="showComment">
+          <div class="col-md-offset-1">
+            <hr>
+            <p ng-repeat="comment in post.comments track by $index">
+              {{comment}}
+            </p>
+            <!-- START: Comment form -->
+            <!-- was: ng-model="post.newComment" Example: ng-model="$ctrl.post.author" -->
+            <form name="post-comment" class="form-inline" ng-submit="$ctrl.addComment(post)">
+              <div class="form-group">
+                <input class="form-control" ng-model="post.newComment"  ng-mousedown="$ctrl.idMe($index)">
+              </div>
+              <div class="form-group">
+               <input type="submit" class="btn btn-primary">
+             </div>
+           </form>
+           <!-- END: Comment form -->
+         </div>
+       </div>
+     </div>
+   </div>
+   <!-- END: Post List -->
+
+ </div>
+</div>
+</main>
