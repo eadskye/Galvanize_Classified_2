@@ -11,7 +11,7 @@
       vm.$onInit= onInit;
 
       function onInit() {
-        console.log('hello from app.component');
+        // console.log('hello from app.component');
       }
     }
 }());

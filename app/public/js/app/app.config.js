@@ -8,6 +8,7 @@
     $locationProvider.html5Mode(true);
 
     $stateProvider
+    //parent
     .state({
       name: 'app',
       abstract: true,
@@ -17,7 +18,14 @@
         name: 'classified',
         parent: 'app',
         url: '/',
-        component: 'appComponent'
+        component: 'classifiedComponent'
+      })
+      .state({
+        name: 'edit',
+        parent: 'app',
+        url: '/:id/edit',
+        component:'edit'
       });
+
   }
 }());
