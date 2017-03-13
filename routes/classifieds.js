@@ -48,7 +48,7 @@ router.post('/', (req, res, next) => {
     .catch(err => next(err));
 });
 
-});
+
 router.patch('/:id', (req, res, next) => {
   let reqID = parseInt(req.params.id);
 
