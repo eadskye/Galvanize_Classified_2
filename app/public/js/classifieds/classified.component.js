@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   angular.module('app')
-    .component('classified', {
+    .component('classifiedComponent', {
       templateUrl: 'js/classifieds/classified.template.html',
       controller: controller
     });
