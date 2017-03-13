@@ -3,7 +3,7 @@
 angular.module('app')
   .component('edit', {
     controller: controller,
-    templateUrl: 'js/edit/edit-classified-template.html'
+    templateUrl: '/js/edit/edit-classified.template.html'
   });
 
   controller.$inject = ['$stateParams', '$state', 'classifiedService'];
@@ -16,12 +16,10 @@ angular.module('app')
 
         function onInit() {
           classifiedService.getById($stateParams.id).then(ad => vm.ad = ad);
-          console.log('hello from edit component');
          }
 
 
         function editAd() {
-          console.log('hello function edit ad');
           classifiedService.edit(vm.ad, $stateParams.id)
             .then(() => $state.go('classified'));
          }
@@ -29,7 +27,6 @@ angular.module('app')
         function deleteAd() {
           classifiedService.del(vm.ad)
           .then(() => $state.go('classified'));
-          // console.log('hello function delete ad');
          }
     }
  }());

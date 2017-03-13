@@ -18,7 +18,7 @@
  </ul>
     <h3>Advertisements</h3>
 
-    <div ng-repeat="classified in $ctrl.classifieds | orderBy: $ctrl.sort | filter: $ctrl.search">
+    <div ng-repeat="classified in $ctrl.ads | orderBy: $ctrl.sort | filter: $ctrl.search">
     <div>
         {{classified.title}}
         {{classified.description}}
@@ -32,15 +32,15 @@
 
 
 <h3>Add New Classified</h3>
-<form novalidate name="$ctrl.classifiedForm" ng-submit="$ctrl.addClassified($ctrl.classifiedData.title, $ctrl.classifiedData.description, $ctrl.classifiedData.price, $ctrl.classifiedData.item_image)">
+<form novalidate name="form" ng-submit="$ctrl.createAd($ctrl.ad)">
     <label for="title">Title</label><br />
-    <input type="text" name="title" ng-model="$ctrl.classifiedData.title"/><br />
+    <input type="text" name="title" ng-model="$ctrl.ad.title"/><br />
     <label for="description">Description</label><br />
-    <input type="text" name="description" ng-model="$ctrl.classifiedData.description"/><br />
+    <input type="text" name="description" ng-model="$ctrl.ad.description"/><br />
     <label for="price">Price</label><br />
-    <input type="text" name="price" ng-model="$ctrl.classifiedData.price"/><br />
+    <input type="text" name="price" ng-model="$ctrl.ad.price"/><br />
     <label for="item_image">Image URL</label><br />
-    <input type="text" name="item_image" ng-model="$ctrl.classifiedData.item_image"/><br />
+    <input type="text" name="item_image" ng-model="$ctrl.ad.item_image"/><br />
   <br />
     <button type="submit" class="btn btn-primary">Create Classified</button>
 </form>

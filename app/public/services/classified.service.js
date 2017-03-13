@@ -15,23 +15,20 @@
       this.del = del;
 
       function all() {
-        return $http.get('/api/classifieds')
-          .then(response => {
-            return response.data;
-          });
-        }
+        return $http.get('/classifieds')
+          .then(response => response.data);
+       }
 
        function getById(id) {
-         return $http.get(`/api/classifieds/${id}`)
+         return $http.get(`/classifieds/${id}`)
             .then(response => {
-              console.log("response",response);
               const ad = response.data;
               return ad;
             });
         }
 
       function create(ad){
-        return $http.post('/api/classifieds', ad)
+        return $http.post('/classifieds', ad)
           .then(response => {
             response.data.ad = {};
             return response.data;
@@ -39,15 +36,14 @@
       }
 
       function edit(ad, id) {
-        return $http.patch(`/api/classifieds/${id}`, ad)
+        return $http.patch(`/classifieds/${id}`, ad)
           .then(response => {
-
             return response.data;
           });
        }
 
       function del() {
-        return $http.delete(`/api/classifieds/${$stateParams.id}`)
+        return $http.delete(`/classifieds/${$stateParams.id}`)
           .then(response =>{
             return response.data;
           });

@@ -20,9 +20,11 @@ router.get('/', (req, res, next) => {
 
 
 router.get('/:id', (req, res, next) => {
+  console.log("get single classified",req.params.id);
       let reqID = parseInt(req.params.id);
-      knex.select('id', 'title', 'description', 'price', 'item_image')
-      .where('id', req.params.id)
+      knex('classifieds')
+      .select('id', 'title', 'description', 'price', 'item_image')
+      .where('id', reqID)
       .first()
       .then((classifieds) => {
         res.json(classifieds);
@@ -34,16 +36,14 @@ router.get('/:id', (req, res, next) => {
 // create a new ad and return the id, title, description, price and item_image that were created.:
 
 router.post('/', (req, res, next) => {
-
+const { id, title, description, price, item_image } = req.body;
   knex('classifieds')//queries the db
     // .returning(['id', 'title', 'description', 'price', 'item_image'])
 
-      .insert(req.body)
-    .returning('*')
+    .insert(req.body)
+    .returning(['id', 'title', 'description', 'price', 'item_image'])
     .then(classifieds => {
-      delete classifieds[0].created_at;
-      delete classifieds[0].updated_at;
-      res.json(classifieds[0]);
+      res.send(classifieds[0]);
     })
     .catch(err => next(err));
 });
@@ -51,16 +51,14 @@ router.post('/', (req, res, next) => {
 
 router.patch('/:id', (req, res, next) => {
   let reqID = parseInt(req.params.id);
-
+console.log("req.body", req.body, req.params.id);
  knex('classifieds')
-   .update(req.body, '*')
+   .update(req.body)
    .where({
      id: reqID
    })
-   .returning('*')
+   .returning(['id', 'title', 'description', 'price', 'item_image'])
    .then(classifieds => {
-     delete classifieds[0].created_at;
-     delete classifieds[0].updated_at;
      res.json(classifieds[0]);
    })
    .catch(err => next(err));
