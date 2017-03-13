@@ -7,11 +7,11 @@ const knex = require('../knex');
 
 router.get('/', (req, res, next) => {
   knex('classifieds')
-    .select('id', 'title', 'description', 'price', 'item_image')
+    .select('id', 'title', 'description', 'price', 'item_image').from('classifieds')
     .orderBy('id')
     .then((classifieds) => {
 
-      res.send(classifieds);
+      res.json(classifieds);
     })
     .catch((err) => {
       next(err);
@@ -20,16 +20,12 @@ router.get('/', (req, res, next) => {
 
 
 router.get('/:id', (req, res, next) => {
-    const id = Number.parseInt(req.params.id);
-    if (isNaN(id)) {
-      return next();
-    }
-    knex('classifieds')
-      .select('id', 'title', 'description', 'price', 'item_image')
+      let reqID = parseInt(req.params.id);
+      knex.select('id', 'title', 'description', 'price', 'item_image')
       .where('id', req.params.id)
       .first()
       .then((classifieds) => {
-        res.send(classifieds);
+        res.json(classifieds);
       })
       .catch((err) => {
         next(err);
@@ -41,66 +37,61 @@ router.post('/', (req, res, next) => {
 
   knex('classifieds')//queries the db
     // .returning(['id', 'title', 'description', 'price', 'item_image'])
-    .insert({
-      id: req.body.id,
-      title: req.body.title,
-      description: req.body.description,
-      price: req.body.price,
-      item_image: req.body.item_image
-    }, ['id', 'title', 'description', 'price', 'item_image'])
-    .then((classifieds) => {
 
-      res.send(classifieds[0]);
+      .insert(req.body)
+    .returning('*')
+    .then(classifieds => {
+      delete classifieds[0].created_at;
+      delete classifieds[0].updated_at;
+      res.json(classifieds[0]);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(err => next(err));
+});
 
 });
 router.patch('/:id', (req, res, next) => {
-  knex('classifieds')
-    .where('id', req.params.id)
-    .update({
-      id: req.body.id,
-      title: req.body.title,
-      description: req.body.description,
-      price: req.body.price,
-      item_image: req.body.item_image
-    }, ['id', 'title', 'description', 'price', 'item_image'])
-    // .orderBy('id')
-    .then((classifieds) => {
-      res.send(classifieds[0]);
-    })
-    .catch(function(err){
-      next(err);
-    });
+  let reqID = parseInt(req.params.id);
 
-  });
+ knex('classifieds')
+   .update(req.body, '*')
+   .where({
+     id: reqID
+   })
+   .returning('*')
+   .then(classifieds => {
+     delete classifieds[0].created_at;
+     delete classifieds[0].updated_at;
+     res.json(classifieds[0]);
+   })
+   .catch(err => next(err));
+});
 
   router.delete('/:id', (req, res, next) => {
   var classified_ad;
 
   knex('classifieds')
-    .where('id', req.params.id)
-    .select('id', 'title', 'description', 'price', 'item_image')
-    .first()
-    .then((classifieds) => {
-    classified_ad= classifieds;
-      return knex('classifieds')
-        .del()
-        .where('id', req.params.id);
-    })
-    .then(() => {
-      delete classified_ad.created_at;
-      delete classified_ad.updated_at;
-      res.send(classified_ad);
-
-
-    })
-    .catch(function(err){
-      next(err);
-
+  var classified_del;
+let reqID = parseInt(req.params.id);
+knex('classifieds')
+  .where({
+    id: reqID
+  })
+  .first()
+  .then((classified) => {
+    classified_del = classified;
+    return knex('classifieds')
+      .del()
+      .where({
+        id: reqID
+      });
+  })
+  .then(() => {
+    delete classified_del.created_at;
+    delete classified_del.updated_at;
+    res.json(classified_del);
+  })
+  .catch(err => next(err));
 });
 
-});
+
 module.exports= router;
