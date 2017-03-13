@@ -1,7 +1,7 @@
 <!--post ad---------------------------------->
  <ul class="nav nav-pills">
    <li class="active">
-     <input type="search" placeholder="Filter" name="search" class="form-control input-sm search-form" ng-model="search"/>
+     <input type="search" placeholder="Search ads" name="search" class="form-control input-sm search-form" ng-model="search"/>
    </li>
      <li class="dropdown" ng-init="sortType='date'; sortName='Date'">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Sort By {{sortName}}<span class="caret"></span>
@@ -17,21 +17,19 @@
     </li>
  </ul>
     <h3>Advertisements</h3>
-    <div class="media-left" ng-repeat="ad in $ctrl.ads | filter:search | orderBy:sortType">
-      <div class="col-md-12">
-      <div class ="row"><img style="width: 100px; float: left; padding: 20px;" ng-src="{{ad.item_image}}" class="media-object">
-      <div><a ui-sref="edit({id: ad.id})">edit</a></div>
-      <div><p>{{ad.title}}</p></div>
-      <div><p>{{ad.description}}</p></div>
-      <div><p>Price: {{ad.price}}</p></div>
-      <span am-time-ago="ad.created_at">{{ad.created_at | date}}</span>
-     </div>
+
+    <div ng-repeat="classified in $ctrl.classifieds | orderBy: $ctrl.sort | filter: $ctrl.search">
+    <div>
+        {{classified.title}}
+        {{classified.description}}
+        {{classified.price}}
+        <div>
+            <img ng-src="{{classified.item_image}}"/>
+        </div>
+        <button ui-sref="edit({id: classified.id })">Edit | Delete Post</button>
     </div>
-  </div>
+</div>
 
-
-  <form name="form" novalidate ng-submit="$ctrl.createAd(ad)">
-  <fieldset>
 
 <h3>Add New Classified</h3>
 <form novalidate name="$ctrl.classifiedForm" ng-submit="$ctrl.addClassified($ctrl.classifiedData.title, $ctrl.classifiedData.description, $ctrl.classifiedData.price, $ctrl.classifiedData.item_image)">
